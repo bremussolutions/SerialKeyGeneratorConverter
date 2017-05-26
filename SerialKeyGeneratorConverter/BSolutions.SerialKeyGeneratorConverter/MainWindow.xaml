@@ -1,0 +1,48 @@
+﻿<Window x:Class="BSolutions.SerialKeyGeneratorConverter.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BSolutions.SerialKeyGeneratorConverter"
+        mc:Ignorable="d"
+        Title="License File Converter" Height="500" Width="800" ResizeMode="NoResize">
+    <DockPanel LastChildFill="True">
+        <Menu DockPanel.Dock="Top" Padding="5">
+            <MenuItem Header="_File">
+                <MenuItem x:Name="NavOpen" Header="_Open ..." Click="NavOpen_Click" />
+                <Separator />
+                <MenuItem x:Name="NavExit" Header="_Exit" Click="NavExit_Click" />
+            </MenuItem>
+            <MenuItem x:Name="NavConvert" Header="_Convert" IsEnabled="False">
+                <MenuItem x:Name="NavStartConvert" Header="Start Convertion ..." Click="NavStartConvert_Click" />
+            </MenuItem>
+        </Menu>
+
+        <Grid x:Name="GridContent" DockPanel.Dock="Bottom" Visibility="Visible">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <Label Content="Source License File: " />
+            <Label Grid.Row="1" x:Name="LblSourceLicenseFile" FontStyle="Italic" Content="&lt;Source License File&gt;" />
+
+            <Label Grid.Column="1" Content="Quantity Serial Hashs: " />
+            <Label Grid.Row="1" Grid.Column="1" x:Name="LblQuantitySerialHashs" FontStyle="Italic" Content="&lt;Quantity Serial Hashs&gt;" />
+
+            <Label Grid.Column="2" Content="Checksum:" />
+            <TextBox x:Name="TxtChecksum" Grid.Row="1" Grid.Column="2" IsReadOnly="True" Margin="5" Padding="3" FontStyle="Italic" Text="&lt;Checksum&gt;" />
+
+            <ProgressBar x:Name="PbProcess" Grid.Row="2" Height="30" Grid.ColumnSpan="3" Margin="5" Minimum="0" />
+
+            <DataGrid Grid.Row="3" Grid.ColumnSpan="3" x:Name="GridSerialHashs" Margin="5" />
+        </Grid>
+    </DockPanel>
+</Window>
