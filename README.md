@@ -3,6 +3,4 @@ The Serial Key Generator Converter is a tool to convert registration files, whic
 into a .NET Core compatible format.
 
 ## Getting Started
-1. Download and install the current version of [Serial Key Converter 7.0](http://skgenerator.vclexamples.com) and buy a license.
-2. Download and install the latest release of the Serial Key Generator Converter
-3. Generate some Serials with the Serial Key Generator and create a new registration file
+For a quick start guide look at our [Wiki](https://github.com/bremussolutions/SerialKeyGeneratorConverter/wiki/Getting-Started) and download the latest release of the Serial Key Generator Converter.
