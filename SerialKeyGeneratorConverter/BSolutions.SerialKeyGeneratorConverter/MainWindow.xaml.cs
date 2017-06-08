@@ -1,11 +1,13 @@
 ﻿namespace BSolutions.SerialKeyGeneratorConverter
 {
+    using log4net;
     using Microsoft.Win32;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.OleDb;
     using System.Data.SQLite;
+    using System.Reflection;
     using System.Windows;
 
     /// <summary>
@@ -15,17 +17,25 @@
     {
         public Dictionary<int, string> SerialHashs { get; set; } = new Dictionary<int, string>();
 
-        private readonly BackgroundWorker worker = new BackgroundWorker();
+        private readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly BackgroundWorker _worker = new BackgroundWorker();
 
         public MainWindow()
         {
-            InitializeComponent();
+            try
+            {
+                InitializeComponent();
 
-            this.worker.WorkerReportsProgress = true;
-            this.worker.WorkerSupportsCancellation = true;
-            this.worker.DoWork += new DoWorkEventHandler(worker_DoWork);
-            this.worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
-            this.worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
+                this._worker.WorkerReportsProgress = true;
+                this._worker.WorkerSupportsCancellation = true;
+                this._worker.DoWork += new DoWorkEventHandler(worker_DoWork);
+                this._worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
+                this._worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
+            }
+            catch (Exception ex)
+            {
+                this._log.Fatal("An error occurred during the application startup.", ex);
+            }
         }
 
         #region --- Background Worker ---
@@ -47,12 +57,12 @@
 
                 foreach (var row in this.SerialHashs)
                 {
-                    if (!this.worker.CancellationPending)
+                    if (!this._worker.CancellationPending)
                     {
                         command = new SQLiteCommand($"INSERT INTO Hash (SerialHash) VALUES ('{row.Value}')", connection);
                         command.ExecuteNonQuery();
 
-                        this.worker.ReportProgress(itemsFinished++);
+                        this._worker.ReportProgress(itemsFinished++);
                     }
                 }
 
@@ -99,6 +109,7 @@
                     this.PbProcess.Maximum = this.SerialHashs.Count - 1;
 
                     this.GridSerialHashs.ItemsSource = this.SerialHashs;
+                    this.TxtChecksum.Text = "<Checksum>";
                     this.GridContent.Visibility = Visibility.Visible;
                     this.NavConvert.IsEnabled = true;
                     this.PbProcess.Value = 0;
@@ -117,13 +128,18 @@
 
             SaveFileDialog saveFileDialog = new SaveFileDialog()
             {
-                Filter = "License Files (*.lic)|*.lic|Database Files (*.db)|*.db|All files (*.*)|*.*",
+                Filter = "Database Files (*.db)|*.db|All files (*.*)|*.*",
                 Title = "Please create a new license file for convertion"
             };
 
             if (saveFileDialog.ShowDialog() == true)
             {
-                this.worker.RunWorkerAsync(saveFileDialog.FileName);
+                this._worker.RunWorkerAsync(saveFileDialog.FileName);
+            }
+            else
+            {
+                this.NavStartConvert.IsEnabled = true;
+                this.NavOpen.IsEnabled = true;
             }
         }
 
@@ -149,6 +165,11 @@
                     this.SerialHashs.Add(reader.GetInt32(0), reader.GetString(1));
                 }
             }
+        }
+
+        private void NavHelp_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show($"Serial Key Generator Converter\n\nCopyright {DateTime.Now.Year} by Bremus Solutions\n\nhttps://github.com/bremussolutions/SerialKeyGeneratorConverter");
         }
     }
 }

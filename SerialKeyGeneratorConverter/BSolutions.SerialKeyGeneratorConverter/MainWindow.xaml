@@ -16,6 +16,7 @@
             <MenuItem x:Name="NavConvert" Header="_Convert" IsEnabled="False">
                 <MenuItem x:Name="NavStartConvert" Header="Start Convertion ..." Click="NavStartConvert_Click" />
             </MenuItem>
+            <MenuItem x:Name="NavHelp" Header="Help" Click="NavHelp_Click" />
         </Menu>
 
         <Grid x:Name="GridContent" DockPanel.Dock="Bottom" Visibility="Visible">
